@@ -1,9 +1,22 @@
+const url = "./resume.pdf";
+
+// how to add child to parent in DOM using javascript
+
+// const div = document.querySelector(".Idiv");
+// const child = document.createElement("div");
+// child.classList = "child";
+
+// div.appendChild(child);
+
+// var textToadd = document.createTextNode("Text to add");
+// child.appendChild(textToadd);
+
 var currPage = 1; //Pages are 1-based not 0-based
 var numPages = 0;
 var thePDF = null;
 
 //This is where you start
-pdfjsLib.getDocument("./resume.pdf").then(function (pdf) {
+pdfjsLib.getDocument(url).then(function (pdf) {
   //Set PDFJS global object (so we can easily access in our page functions
   thePDF = pdf;
 
@@ -29,7 +42,8 @@ function handlePages(page) {
   page.render({ canvasContext: context, viewport: viewport });
 
   //Add it to the web page
-  document.body.appendChild(canvas);
+  const div = document.querySelector(".parent");
+  div.appendChild(canvas);
 
   //Move to next page
   currPage++;

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>simple pdf viewer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.0.943/pdf.min.js"></script>
+  </head>
+  <body>
+    <script>
+      var defaultState = {
+        pdf: null,
+        currentPage: 1,
+        allPages: 0,
+        zoom: 1,
+      };
+
+      pdfjsLib.getDocument("./resume.pdf").then((pdf) => {
+        defaultState.pdf = pdf;
+        allPages = pdf.numPages;
+        pdf.getPage(1).then(render);
+        // render();
+      });
+
+      function render(page) {
+        // console.log(page);
+        // defaultState.pdf.getPage(defaultState.currentPage).then((page) => {
+        // var canvas = document.getElementById("pdf_renderer");
+
+        var viewport = page.getViewport(defaultState.zoom);
+        // creating canvas for each page to draw it on
+        var canvas = document.createElement("canvas");
+        canvas.style.display = "block";
+
+        var ctx = canvas.getContext("2d");
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+
+        page.render({
+          canvasContext: ctx,
+          viewport: viewport,
+        });
+
+        // add it to the web page
+        document.body.appendChild(canvas);
+
+        // move to next page
+        defaultState.currentPage++;
+        // console.log(defaultState.currentPage++);
+        console.log(defaultState.pdf.getPage);
+        // Move to next page
+        if (
+          defaultState.pdf !== null &&
+          defaultState.currentPage <= defaultState.allPages
+        ) {
+          console.log("working");
+          defaultState.pdf.getPage(defaultState.currentPage).then(render);
+        }
+        // });
+      }
+
+      // document.getElementById("previous").addEventListener("click", (e) => {
+      //   if (defaultState.pdf == null || defaultState.currentPage == 1) return;
+      //   defaultState.currentPage -= 1;
+      //   document.getElementById("current_page").value =
+      //     defaultState.currentPage;
+      //   render();
+      // });
+
+      // document.getElementById("next").addEventListener("click", (e) => {
+      //   if (
+      //     defaultState.pdf == null ||
+      //     defaultState.currentPage > defaultState.pdf._pdfInfo.numPages
+      //   )
+      //     return;
+      //   defaultState.currentPage += 1;
+      //   document.getElementById("current_page").value =
+      //     defaultState.currentPage;
+      //   render();
+      // });
+
+      // document.getElementById("zoom_in").addEventListener("click", (e) => {
+      //   if (defaultState.pdf == null) return;
+      //   defaultState.zoom += 0.5;
+      //   render();
+      // });
+
+      // document.getElementById("zoom_out").addEventListener("click", (e) => {
+      //   if (defaultState.pdf == null) return;
+      //   defaultState.zoom -= 0.5;
+      //   render();
+      // });
+    </script>
+  </body>
+</html>
